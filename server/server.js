@@ -15,7 +15,13 @@ const io = new Server(server, {
 const chatNamespace = io.of('/chat')
 
 chatNamespace.use((socket, next) =>{
-
+  const { token, userId } = socket.handshake.query;
+  if (token === 'valid_token') {
+    socket.userId = userId;
+    next();
+  } else {
+    next(new Error('Unauthorized'));
+  }
 })
 
 
